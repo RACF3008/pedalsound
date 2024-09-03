@@ -1,0 +1,5 @@
+KUBERNETES
+- kubectl get namespace: muestra todos los namespaces 
+- kubectl get services: muestra los servicios dentro del default namespace
+- kubectl get services -n NAMESPACE: muestra los servicios dentro de determinaod namespace
+    - NAMESPACE -> nombre del namespace del que queremos conocer los servicios
