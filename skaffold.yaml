@@ -23,3 +23,11 @@ build:
         manual:
           - src: '**/*.js'
             dest: .
+    - image: racf3008/products
+      context: products
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .

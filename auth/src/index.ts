@@ -7,9 +7,12 @@ const start = async () => {
     if (!process.env.JWT_KEY) {
         throw new Error('Falta la llave para el JWT');
     }
+    if (!process.env.MONGO_URI) {
+        throw new Error('Falta la URI de MongoDB');
+    }
     // Intentar la conexión a MongoDb
     try {
-        await mongoose.connect('mongodb://auth-mongo-srv:27017/auth');
+        await mongoose.connect(process.env.MONGO_URI);
         console.log('Conexión a MongoDB exitosa!');
     } catch (err) {
         console.log(err);

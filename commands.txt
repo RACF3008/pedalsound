@@ -1,3 +1,18 @@
+PROCEDIMIENTO PARA CREAR UN NUEVO SERVICIO
+1. Crear package.json con "npm init"
+2. Instalar las dependencias necesarias con "npm install ###"
+3. Escribir el Dockerfile junto con el .dockerignore
+4. Crear el index.ts para ejecutar el proyecto
+5. Crear una imagen de Docker con "docker build -t racf3008/### ."
+    - En los ### va el nombre del servicio
+6. Subir la imagen a docker hub con "docker push racf3008/###"
+    - Nuevamente, en los ### va el nombre del servicio
+7. Crear un archivo de kubernetes (.yaml) para el nuevo servicio
+    - Hacer el deployment y el servicio Cluster IP
+8. Actualizar el archivo skaffold para esuchar cambios en algún archivo
+9. Crear una nueva conexión a Mongo DB utilizando un deployment
+
+
 KUBERNETES
 - kubectl get namespace: muestra todos los namespaces 
 - kubectl get services: muestra los servicios dentro del default namespace
