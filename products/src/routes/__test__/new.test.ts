@@ -2,6 +2,7 @@ import request from 'supertest';
 import { app } from '../../app';
 
 import { Product } from '../../models/product';
+import { natsWrapper } from '../../nats-wrapper';
 
 it('has a route handler listening to /api/products for post requests', async () => {
     const response = await request(app)
@@ -89,4 +90,22 @@ it('creates a product with valid parameters', async () => {
     expect(products.length).toEqual(1);
     expect(products[0].title).toEqual(title);
     expect(products[0].price).toEqual(10);
+});
+
+it('publishes an event', async () => {
+    const title = 'test title';
+
+    // Crear un producto
+    await request(app)
+        .post('/api/products')
+        .set('Cookie', global.signin())
+        .send({
+            title: title,
+            price: 10
+        })
+        .expect(201);
+
+    // Verificar si se publicó el evento (osea si el callback
+    // de la función mock de natsWrapper se ejecutó).
+    expect(natsWrapper.client.publish).toHaveBeenCalled();
 });

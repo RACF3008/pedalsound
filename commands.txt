@@ -18,3 +18,6 @@ KUBERNETES
 - kubectl get services: muestra los servicios dentro del default namespace
 - kubectl get services -n NAMESPACE: muestra los servicios dentro de determinaod namespace
     - NAMESPACE -> nombre del namespace del que queremos conocer los servicios
+- kubectl exec -it POD-ID mongo: accede a una terminal de mongo dentro del pod de mongo especificado
+    - POD_ID -> identificador del pod al que queremos acceder a su bd
+    - Ej. kubectl exec -it orders-mongo-depl-55d4d77fd-94nvl mongo

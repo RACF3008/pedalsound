@@ -2,6 +2,8 @@ import request from 'supertest';
 import { app } from '../../app';
 import mongoose from 'mongoose';
 
+import { natsWrapper } from '../../nats-wrapper';
+
 it('returns a 404 if the product id does not exist', async () => {
     // Crear un id valido
     const id = new mongoose.Types.ObjectId().toHexString();
@@ -114,4 +116,31 @@ it('updates the product information successfully', async () => {
         .expect(200);
     expect(productResponse.body.title).toEqual('new title');
     expect(productResponse.body.price).toEqual(11);
+});
+
+it('publishes an event', async () => {
+    // Crear una cookie para crear el producto y luego intentar actualizarlo
+    const cookie = global.signin();
+
+    // Crear un nuevo producto
+    const response = await request(app)
+        .post('/api/products')
+        .set('Cookie', cookie)
+        .send({
+            title: 'test title',
+            price: 10
+        })
+        .expect(201);
+ 
+    // Actualizar el producto
+    await request(app)
+        .put(`/api/products/${response.body.id}`)
+        .set('Cookie', cookie)
+        .send({
+            title: 'new title',
+            price: 11
+        })
+        .expect(200);
+
+    expect(natsWrapper.client.publish).toHaveBeenCalled();
 });

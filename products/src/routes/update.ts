@@ -7,6 +7,8 @@ import {
     NotAuthorizedError
 } from '@racf-pedalsound/common';
 import { Product } from '../models/product';
+import { ProductUpdatedPublisher } from '../events/publishers/product-updated-publisher';
+import { natsWrapper } from '../nats-wrapper';
 
 const router = express.Router();
 
@@ -42,6 +44,13 @@ router.put(
             price: req.body.price
         });
         await product.save();
+        new ProductUpdatedPublisher(natsWrapper.client).publish({
+            id: product.id,
+            title: product.title,
+            price: product.price,
+            userId: product.userId,
+            version: product.version
+        });
 
         res.send(product);
     }

@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 
 // Definir los atributos que tendra el modelo
 // de producto
@@ -12,6 +13,7 @@ interface ProductDoc extends mongoose.Document{
     title: string;
     price: number;
     userId: string;
+    version: number;
 }
 
 interface ProductModel extends mongoose.Model<ProductDoc> {
@@ -43,6 +45,12 @@ const productSchema = new mongoose.Schema({
         }
     }
 });
+
+// Configurar el nombre del atributo de versión como "version"
+productSchema.set('versionKey', 'version');
+
+// Añadir el plugin de actualización de versiones
+productSchema.plugin(updateIfCurrentPlugin);
 
 productSchema.statics.build = (attrs: ProductAttrs) => {
     return new Product(attrs);

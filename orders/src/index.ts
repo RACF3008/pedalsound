@@ -2,6 +2,8 @@ import mongoose from 'mongoose';
 
 import { app } from './app';
 import { natsWrapper } from './nats-wrapper';
+import { ProductCreatedListener } from './events/listeners/product-created-listener';
+import { ProductUpdatedListener } from './events/listeners/product-updated-listener';
 
 const start = async () => { 
     // Revisar que la llave para el JWT existe en las variables de entorno
@@ -32,6 +34,9 @@ const start = async () => {
     });
     process.on('SIGINT', () => natsWrapper.client.close());
     process.on('SIGTERM', () => natsWrapper.client.close());
+
+    new ProductCreatedListener(natsWrapper.client).listen();
+    new ProductUpdatedListener(natsWrapper.client).listen();
 
     await mongoose.connect(process.env.MONGO_URI);
     console.log('Conexión a MongoDB exitosa!');
